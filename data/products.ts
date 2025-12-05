@@ -279,7 +279,7 @@ export const products: Product[] = [
         id: 205,
         name: "Smart Home Hub",
         price: "₹9,999",
-        image: "https://images.unsplash.com/photo-1558002038-109177381792?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1558089687-f282ffcbc0d5?auto=format&fit=crop&q=80&w=800",
         badge: "Featured",
         rating: 4.6,
         reviewCount: 512,
@@ -336,7 +336,7 @@ export const products: Product[] = [
         id: 208,
         name: "Portable Projector 4K",
         price: "₹32,999",
-        image: "https://images.unsplash.com/photo-1535016120720-40c6874c3b1c?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1596322723326-0e9f3b2d1c6f?auto=format&fit=crop&q=80&w=800",
         badge: "Featured",
         rating: 4.7,
         reviewCount: 645,
@@ -623,7 +623,7 @@ export const products: Product[] = [
         id: 401,
         name: "Slim Fit Jeans",
         price: "₹3,700",
-        image: "https://images.unsplash.com/photo-1542272454315-7ad2d8c9724c?w=400&h=400&fit=crop",
+        image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=800",
         badge: "Essential",
         rating: 4.7,
         reviewCount: 1500,
@@ -631,8 +631,8 @@ export const products: Product[] = [
         features: ["Stretch Denim", "Slim Tapered Leg", "5-Pocket Styling", "Durable Hardware"],
         colors: ["Dark Blue", "Black"],
         images: [
-            "https://images.unsplash.com/photo-1542272454315-7ad2d8c9724c?w=800&h=800&fit=crop",
-            "https://images.unsplash.com/photo-1542272454315-7ad2d8c9724c?w=800&h=800&fit=crop&q=80"
+            "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&h=800&fit=crop",
+            "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&h=800&fit=crop&q=80"
         ],
         longDescription: "Jeans that move with you. Our Slim Fit Jeans are crafted from a premium cotton-stretch blend that offers the look of authentic denim with the comfort of sweatpants.\n\nThe slim tapered leg provides a modern silhouette that works with sneakers or boots.",
         shippingInfo: "Free shipping.",
@@ -834,7 +834,7 @@ export const products: Product[] = [
         id: 602,
         name: "Wall Art Canvas",
         price: "₹4,100",
-        image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=400&h=400&fit=crop",
+        image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800",
         badge: "Art",
         rating: 4.8,
         reviewCount: 250,
@@ -842,8 +842,8 @@ export const products: Product[] = [
         features: ["High-Quality Canvas", "Fade-Resistant Ink", "Gallery Wrapped", "Ready to Hang"],
         colors: ["Abstract"],
         images: [
-            "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=800&fit=crop",
-            "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=800&fit=crop&q=80"
+            "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=800&fit=crop",
+            "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=800&fit=crop&q=80"
         ],
         longDescription: "Make a statement. Our Wall Art Canvas prints are high-definition and vibrant. Gallery wrapped around a sturdy wooden frame, they are ready to hang right out of the box.\n\nPerfect for the living room or office.",
         shippingInfo: "Oversized shipping.",
@@ -928,7 +928,7 @@ export const products: Product[] = [
         id: 702,
         name: "Floor Lamp",
         price: "₹6,200",
-        image: "https://images.unsplash.com/photo-1534105615352-9e0852b6a45a?w=400&h=400&fit=crop",
+        image: "https://images.unsplash.com/photo-1507473888900-52e1adad5481?auto=format&fit=crop&q=80&w=800",
         badge: "Lighting",
         rating: 4.8,
         reviewCount: 280,
@@ -936,8 +936,8 @@ export const products: Product[] = [
         features: ["Adjustable Height", "Metal Construction", "Foot Switch", "Modern Design"],
         colors: ["Black", "Brass"],
         images: [
-            "https://images.unsplash.com/photo-1534105615352-9e0852b6a45a?w=800&h=800&fit=crop",
-            "https://images.unsplash.com/photo-1534105615352-9e0852b6a45a?w=800&h=800&fit=crop&q=80"
+            "https://images.unsplash.com/photo-1507473888900-52e1adad5481?w=800&h=800&fit=crop",
+            "https://images.unsplash.com/photo-1507473888900-52e1adad5481?w=800&h=800&fit=crop&q=80"
         ],
         longDescription: "Illuminate your room from above. This Floor Lamp features a sleek, arc design that reaches over sofas or armchairs. The heavy base ensures stability.\n\nThe modern finish adds a touch of sophistication to any room.",
         shippingInfo: "Oversized shipping.",
@@ -951,7 +951,7 @@ export const products: Product[] = [
         id: 703,
         name: "LED Strip Lights",
         price: "₹1,650",
-        image: "https://images.unsplash.com/photo-1571953594807-1f0fd82b63f6?w=400&h=400&fit=crop",
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
         badge: "Tech",
         rating: 4.6,
         reviewCount: 1200,
@@ -959,8 +959,8 @@ export const products: Product[] = [
         features: ["App Control", "Music Sync", "Easy Installation", "16 Million Colors"],
         colors: ["RGB"],
         images: [
-            "https://images.unsplash.com/photo-1571953594807-1f0fd82b63f6?w=800&h=800&fit=crop",
-            "https://images.unsplash.com/photo-1571953594807-1f0fd82b63f6?w=800&h=800&fit=crop&q=80"
+            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=800&fit=crop",
+            "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=800&fit=crop&q=80"
         ],
         longDescription: "Set the vibe. Our LED Strip Lights are perfect for gaming setups, bedrooms, or home theaters. Control them with your phone or voice assistant.\n\nSync them to your music for a party atmosphere.",
         shippingInfo: "Standard shipping.",
