@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import SearchModal from "./SearchModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Header() {
     const pathname = usePathname();
@@ -14,6 +15,9 @@ export default function Header() {
     const [showBottomNav, setShowBottomNav] = useState(false);
     const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isHoveringBottomNav = useRef(false);
+
+    // Global Translation
+    const { t } = useLanguage();
 
     const startHideTimeout = useCallback(() => {
         if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
@@ -109,7 +113,7 @@ export default function Header() {
                         <div className="h-8 sm:h-10 w-auto relative flex-shrink-0">
                             <img
                                 src="/logo-full.png"
-                                alt="ROUNDMART"
+                                alt={t.appName}
                                 className="h-full w-auto object-contain"
                             />
                         </div>
@@ -117,19 +121,19 @@ export default function Header() {
 
                     <nav className="hidden md:flex items-center gap-9">
                         <Link href="/" onClick={handleNavClick} className={`text-sm font-medium transition-colors ${isActive("/") && pathname === "/" ? "text-primary font-semibold" : "hover:text-primary"}`}>
-                            Home
+                            {t.home}
                         </Link>
                         <Link href="/trending" onClick={handleNavClick} className={`text-sm font-medium transition-colors ${isActive("/trending") ? "text-primary font-semibold" : "hover:text-primary"}`}>
-                            Trending
+                            {t.trendingNow}
                         </Link>
                         <Link href="/collections" onClick={handleNavClick} className={`text-sm font-medium transition-colors ${isActive("/collections") ? "text-primary font-semibold" : "hover:text-primary"}`}>
-                            Shop
+                            {t.shop}
                         </Link>
                         <Link href="/discover" onClick={handleNavClick} className={`text-sm font-medium transition-colors ${isActive("/discover") ? "text-primary font-semibold" : "hover:text-primary"}`}>
-                            Discover
+                            {t.exploreCollections}
                         </Link>
                         <Link href="/contact" onClick={handleNavClick} className={`text-sm font-medium transition-colors ${isActive("/contact") ? "text-primary font-semibold" : "hover:text-primary"}`}>
-                            Support
+                            {t.contact}
                         </Link>
                     </nav>
 
@@ -189,7 +193,7 @@ export default function Header() {
                                         <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                                             <span className="material-symbols-outlined text-lg text-gray-900 dark:text-white">person</span>
                                         </div>
-                                        <span className="text-sm font-bold text-gray-900 dark:text-white">Account</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{t.account}</span>
                                     </Link>
                                     <Link
                                         href="/cart"
@@ -199,24 +203,24 @@ export default function Header() {
                                         <div className="w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center">
                                             <span className="material-symbols-outlined text-lg text-white dark:text-black">shopping_bag</span>
                                         </div>
-                                        <span className="text-sm font-bold text-gray-900 dark:text-white">Cart</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{t.cart}</span>
                                     </Link>
                                 </div>
                             )}
                             <Link href="/" onClick={() => { setMobileMenuOpen(false); handleNavClick(); }} className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${isActive("/") && pathname === "/" ? "bg-primary/10 text-primary font-semibold" : "hover:bg-black/5 dark:hover:bg-white/5"}`}>
-                                Home
+                                {t.home}
                             </Link>
                             <Link href="/trending" onClick={() => { setMobileMenuOpen(false); handleNavClick(); }} className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${isActive("/trending") ? "bg-primary/10 text-primary font-semibold" : "hover:bg-black/5 dark:hover:bg-white/5"}`}>
-                                Trending
+                                {t.trendingNow}
                             </Link>
                             <Link href="/collections" onClick={() => { setMobileMenuOpen(false); handleNavClick(); }} className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${isActive("/collections") ? "bg-primary/10 text-primary font-semibold" : "hover:bg-black/5 dark:hover:bg-white/5"}`}>
-                                Shop
+                                {t.shop}
                             </Link>
                             <Link href="/discover" onClick={() => { setMobileMenuOpen(false); handleNavClick(); }} className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${isActive("/discover") ? "bg-primary/10 text-primary font-semibold" : "hover:bg-black/5 dark:hover:bg-white/5"}`}>
-                                Discover
+                                {t.exploreCollections}
                             </Link>
                             <Link href="/contact" onClick={() => { setMobileMenuOpen(false); handleNavClick(); }} className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${isActive("/contact") ? "bg-primary/10 text-primary font-semibold" : "hover:bg-black/5 dark:hover:bg-white/5"}`}>
-                                Support
+                                {t.contact}
                             </Link>
                         </nav>
                     </div>

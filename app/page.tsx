@@ -3,12 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { products } from "@/data/products";
 
 const heroImages = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCxAZZYOK6YeLi5TlHyKGnIbcZ4TuQeQSu0BUU-J19AySsWLcRfezZBtdXwbaMgJUvS46AgE5SR-lZSPajGVye4LHRh6Tdpz1atLJWKmq9QLODTyajr6e16uwNKNzQ98lSwczYOvGMjCwdB-4GGhWYHGurXrwykuzQLYxY7bx2C42kP1xTAsR-pG47bjgkj9UEevprp7Oox3Zuz3bjYpcMlRjP3_67IRjS4NNDw3fkf3YPiDQW6F-Yy6O9NubeOUYZhRW8L6uETvSOm",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDzZSQAWKsi-hI7A81k94F9zbB7n6cgMD0FfxUUZwHxLgu9IZwA6w0QRYoBSL9XPUHpS-IKy4Lp2IZocOiom3eipJsYvulZlhSO5q6wuMpkFq7YzAr2nVIfLU1GCp2wzaC0_K0ZSnFPaBJUu0PGofolppwIsFpguUt8elFwxQCGYu_JfZ7BYPhf7a1LJtKT4bgZkGz5Nv30DRsVtS3rqpqCj7v74HzMpgByg_JRsZm-_YRbblJNYHgj5G14kkoqrhYvEx2zYrK2TRcv",
+  "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800",
   "https://lh3.googleusercontent.com/aida-public/AB6AXuB4bC__os7z5r7lWxmluOwzV9vuAtAwTz48A0LbopPw-_EZqQSc63qxVhZLFm9TPIQIbas6DqxwWyEU-ii5rKGwBaiDq-R85Rjfz4XDhPF9MAb0UifFBWmo6bwCPdTMHzOGjdQ1WZBUoGaBrdqy3BEBcyfCadH6CtbwFQEAbBgSAGQvYiLtbV7Sb6QojKU4ueQTxhCDqUuW07Dl6hFEF__kbamjlGXTL4nn1VFfJH8Y-V7ZxiVFX3kmJ5UxTYm8l7oS9n_E_dpezYqJ"
 ];
 
@@ -19,6 +20,8 @@ export default function Home() {
   const [touchEnd, setTouchEnd] = useState(0);
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const { t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -62,16 +65,16 @@ export default function Home() {
             {/* Left Content - Hidden on Mobile */}
             <div className="hidden lg:flex flex-1 lg:order-1 flex-col items-center lg:items-start gap-8 z-10">
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-text-light dark:text-text-dark leading-[1.1]">
-                Designed for Life.
+                {t.heroTitle}
               </h1>
               <p className="text-lg md:text-xl text-text-secondary-light dark:text-text-secondary-dark max-w-lg leading-relaxed">
-                Discover our latest collection of premium goods, crafted with precision and passion for the discerning individual.
+                {t.heroSubtitle}
               </p>
               <Link
                 href="/collections"
                 className="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300"
               >
-                Shop the Collection
+                {t.shopCollection}
               </Link>
             </div>
 
@@ -117,7 +120,7 @@ export default function Home() {
                   href="/collections"
                   className="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 active:scale-95 transition-all duration-300"
                 >
-                  Shop the Collection
+                  {t.shopCollection}
                 </Link>
               </div>
             </div>
@@ -197,7 +200,7 @@ export default function Home() {
           <section>
             <div className="flex flex-col items-center text-center gap-4 mb-12">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-text-light dark:text-text-dark">
-                Best Sellers / Trending Now
+                {t.bestSellers}
               </h2>
               <p className="text-lg text-text-secondary-light dark:text-text-secondary-dark max-w-2xl">
                 Most purchased products — loved by our customers.

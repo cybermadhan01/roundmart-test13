@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
+    const { t } = useLanguage();
+
     return (
         <footer className="bg-white dark:bg-black mt-0 border-t border-gray-100 dark:border-gray-800">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
@@ -8,7 +13,7 @@ export default function Footer() {
                     <Link href="/" className="inline-block">
                         <img
                             src="/logo-full.png"
-                            alt="ROUNDMART"
+                            alt={t.appName}
                             className="h-8 sm:h-10 w-auto object-contain"
                         />
                     </Link>
@@ -16,38 +21,38 @@ export default function Footer() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
                     {/* Shop Column */}
                     <div className="flex flex-col gap-6">
-                        <h3 className="font-bold text-lg text-text-light dark:text-text-dark">Shop</h3>
+                        <h3 className="font-bold text-lg text-text-light dark:text-text-dark">{t.shop}</h3>
                         <div className="flex flex-col gap-4">
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
                                 href="/collections"
                             >
-                                All Products
+                                {t.viewAll}
                             </Link>
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
                                 href="/new-arrivals"
                             >
-                                New Arrivals
+                                {t.newArrivals}
                             </Link>
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
                                 href="/featured"
                             >
-                                Featured
+                                {t.featuredProducts}
                             </Link>
                         </div>
                     </div>
 
                     {/* Company Column */}
                     <div className="flex flex-col gap-6">
-                        <h3 className="font-bold text-lg text-text-light dark:text-text-dark">Company</h3>
+                        <h3 className="font-bold text-lg text-text-light dark:text-text-dark">{t.about}</h3>
                         <div className="flex flex-col gap-4">
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
                                 href="/about"
                             >
-                                About Us
+                                {t.about}
                             </Link>
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
@@ -72,7 +77,7 @@ export default function Footer() {
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
                                 href="/contact"
                             >
-                                Contact
+                                {t.contact}
                             </Link>
                             <Link
                                 className="text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary hover:translate-x-1 transition-all duration-300"
@@ -124,7 +129,7 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-16 border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                    <p>© 2026 ROUNDMART. All rights reserved.</p>
+                    <p>© 2026 {t.appName}. {t.rightsReserved}</p>
                     <div className="flex items-center gap-6">
                         <Link className="hover:text-primary transition-colors hover:underline" href="/privacy">
                             Privacy Policy

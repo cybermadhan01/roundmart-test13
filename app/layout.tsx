@@ -57,10 +57,8 @@ export const metadata: Metadata = {
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-
-
-
+import { LanguageProvider } from "@/context/LanguageContext";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function RootLayout({
   children,
@@ -79,10 +77,12 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${manrope.variable} font-display antialiased bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark flex flex-col min-h-screen transition-colors duration-300`}
       >
-
-        <Header />
-        {children}
-        <Footer />
+        <LanguageProvider>
+          <Header />
+          {children}
+          <Footer />
+          <ScrollToTop />
+        </LanguageProvider>
       </body>
     </html>
   );

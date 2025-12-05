@@ -16,24 +16,69 @@ export default function ProfilePage() {
 
     useEffect(() => {
         const savedDetails = JSON.parse(localStorage.getItem('roundmart_user_details') || '{}');
-        const savedName = localStorage.getItem('roundmart_user_name') || "Guest";
+        const savedName = localStorage.getItem('roundmart_user_name') || "";
 
-        setUserName(savedName);
-        setUserEmail(savedDetails.email || "");
+        // Set user name - show blank if no name saved
+        setUserName(savedName || "");
 
-        // Generate initials from name
-        const nameParts = savedName.split(' ');
-        const initials = nameParts.length > 1
-            ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
-            : savedName.substring(0, 2).toUpperCase();
-        setUserInitials(initials);
+        // Generate initials from name (only if name exists)
+        if (savedName && savedName.trim()) {
+            const nameParts = savedName.trim().split(' ');
+            const initials = nameParts.length > 1
+                ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+                : savedName.substring(0, 2).toUpperCase();
+            setUserInitials(initials);
+        } else {
+            setUserInitials("");
+        }
 
-        // Update form data
+        // Build location intelligently to avoid duplication
+        // If address already has commas, it's likely a full address - just use it
+        let fullLocation = savedDetails.address || "";
+
+        // Only append structured fields if address seems incomplete (no commas)
+        if (fullLocation && fullLocation.includes(',')) {
+            // Address already looks complete, use as-is
+        } else {
+            // Build from structured parts
+            const partsToCheck = [savedDetails.city, savedDetails.state, savedDetails.country, savedDetails.postalCode];
+            partsToCheck.forEach(part => {
+                if (part && !fullLocation.toLowerCase().includes(part.toLowerCase())) {
+                    fullLocation += fullLocation ? `, ${part}` : part;
+                }
+            });
+        }
+
+        // Detect if the saved 'email' field is actually a phone number or email
+        const savedEmailOrPhone = savedDetails.email || "";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]{10,}$/;
+
+        let actualEmail = "";
+        let actualPhone = savedDetails.phone || "";
+
+        if (savedEmailOrPhone) {
+            if (emailRegex.test(savedEmailOrPhone)) {
+                // It's an email
+                actualEmail = savedEmailOrPhone;
+            } else if (phoneRegex.test(savedEmailOrPhone)) {
+                // It's a phone number
+                actualPhone = savedEmailOrPhone;
+            } else {
+                // Unknown format, put in email field as fallback
+                actualEmail = savedEmailOrPhone;
+            }
+        }
+
+        // Set userEmail for sidebar (only if it's actually an email)
+        setUserEmail(actualEmail);
+
+        // Update form data - show actual values or blank
         setFormData({
-            fullName: savedName,
-            email: savedDetails.email || "",
-            phone: savedDetails.phone || "",
-            location: savedDetails.address || "",
+            fullName: savedName || "",
+            email: actualEmail,
+            phone: actualPhone,
+            location: fullLocation || "",
         });
     }, []);
 
@@ -47,12 +92,18 @@ export default function ProfilePage() {
                             {/* User Profile */}
                             <div className="flex gap-3 items-center">
                                 <div className="flex items-center justify-center size-10 rounded-full bg-gradient-to-br from-primary to-blue-600 text-white font-bold text-sm">
-                                    {userInitials}
+                                    {userInitials || <span className="material-symbols-outlined text-lg">person</span>}
                                 </div>
                                 <div className="flex flex-col">
-                                    <h1 className="text-gray-900 dark:text-white text-base font-medium leading-normal">
-                                        {userName}
-                                    </h1>
+                                    {userName ? (
+                                        <h1 className="text-gray-900 dark:text-white text-base font-medium leading-normal">
+                                            {userName}
+                                        </h1>
+                                    ) : (
+                                        <h1 className="text-gray-400 dark:text-gray-500 text-base font-medium leading-normal italic">
+                                            Not signed in
+                                        </h1>
+                                    )}
                                     {userEmail && (
                                         <p className="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">
                                             {userEmail}
@@ -161,12 +212,14 @@ export default function ProfilePage() {
                                         Email Address
                                     </label>
                                     <input
-                                        className="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 shadow-sm focus:border-primary focus:ring-primary text-gray-400 dark:text-gray-400 sm:text-sm h-11 px-4"
+                                        className="block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm focus:border-primary focus:ring-primary dark:text-white sm:text-sm h-11 px-4"
                                         id="email"
                                         name="email"
-                                        readOnly
                                         type="email"
                                         value={formData.email}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, email: e.target.value })
+                                        }
                                     />
                                 </div>
                                 <div>
@@ -212,10 +265,86 @@ export default function ProfilePage() {
 
                         {/* Action Buttons */}
                         <div className="flex justify-end gap-4">
-                            <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                            <button
+                                onClick={() => {
+                                    // Reset form to saved values
+                                    const savedDetails = JSON.parse(localStorage.getItem('roundmart_user_details') || '{}');
+                                    const savedName = localStorage.getItem('roundmart_user_name') || "";
+
+                                    // Re-run the smart location build logic
+                                    let fullLocation = savedDetails.address || "";
+
+                                    // Only append structured fields if address seems incomplete (no commas)
+                                    if (fullLocation && fullLocation.includes(',')) {
+                                        // Address already looks complete, use as-is
+                                    } else {
+                                        // Build from structured parts
+                                        const partsToCheck = [savedDetails.city, savedDetails.state, savedDetails.country, savedDetails.postalCode];
+                                        partsToCheck.forEach(part => {
+                                            if (part && !fullLocation.toLowerCase().includes(part.toLowerCase())) {
+                                                fullLocation += fullLocation ? `, ${part}` : part;
+                                            }
+                                        });
+                                    }
+
+                                    // Re-run email/phone detection
+                                    const savedEmailOrPhone = savedDetails.email || "";
+                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    const phoneRegex = /^[0-9]{10,}$/;
+                                    let actualEmail = "";
+                                    let actualPhone = savedDetails.phone || "";
+                                    if (savedEmailOrPhone) {
+                                        if (emailRegex.test(savedEmailOrPhone)) actualEmail = savedEmailOrPhone;
+                                        else if (phoneRegex.test(savedEmailOrPhone)) actualPhone = savedEmailOrPhone;
+                                        else actualEmail = savedEmailOrPhone;
+                                    }
+
+                                    setFormData({
+                                        fullName: savedName || "",
+                                        email: actualEmail,
+                                        phone: actualPhone,
+                                        location: fullLocation || "",
+                                    });
+                                }}
+                                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+                            >
                                 <span className="truncate">Cancel</span>
                             </button>
-                            <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                            <button
+                                onClick={() => {
+                                    // Save to localStorage
+                                    localStorage.setItem('roundmart_user_name', formData.fullName);
+                                    const existingDetails = JSON.parse(localStorage.getItem('roundmart_user_details') || '{}');
+
+                                    // When saving location, we overwrite 'address' with the full string
+                                    // and clear the structured fields to prevent duplication on next load
+                                    localStorage.setItem('roundmart_user_details', JSON.stringify({
+                                        ...existingDetails,
+                                        name: formData.fullName,
+                                        email: formData.email,
+                                        phone: formData.phone,
+                                        address: formData.location,
+                                        city: "",
+                                        state: "",
+                                        country: "",
+                                        postalCode: ""
+                                    }));
+
+                                    // Update displayed name and initials
+                                    setUserName(formData.fullName);
+                                    setUserEmail(formData.email);
+                                    if (formData.fullName && formData.fullName.trim()) {
+                                        const nameParts = formData.fullName.trim().split(' ');
+                                        const initials = nameParts.length > 1
+                                            ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+                                            : formData.fullName.substring(0, 2).toUpperCase();
+                                        setUserInitials(initials);
+                                    }
+
+                                    alert('Profile saved successfully!');
+                                }}
+                                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors"
+                            >
                                 <span className="truncate">Save Changes</span>
                             </button>
                         </div>
