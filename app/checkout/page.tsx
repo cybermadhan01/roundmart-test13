@@ -125,6 +125,45 @@ function CheckoutContent() {
     const [postalCodeError, setPostalCodeError] = useState("");
     const [isPostalCodeValidating, setIsPostalCodeValidating] = useState(false);
 
+    // Auto-fill State
+    const [emailInput, setEmailInput] = useState("");
+    const [nameInput, setNameInput] = useState("");
+    const [showAutoFillPopup, setShowAutoFillPopup] = useState(false);
+    const [savedUserDetails, setSavedUserDetails] = useState<any>(null);
+
+    useEffect(() => {
+        const saved = localStorage.getItem('roundmart_user_details');
+        if (saved) {
+            try {
+                setSavedUserDetails(JSON.parse(saved));
+                setShowAutoFillPopup(true);
+            } catch (e) {
+                console.error("Error parsing saved user details", e);
+            }
+        }
+    }, []);
+
+    const handleAutoFill = () => {
+        if (savedUserDetails) {
+            setEmailInput(savedUserDetails.email || "");
+            setNameInput(savedUserDetails.name || "");
+            setAddressInput(savedUserDetails.address || "");
+            setSelectedCountry(savedUserDetails.country || "India");
+
+            if (savedUserDetails.state) {
+                setSelectedState(savedUserDetails.state);
+                setStateInput(savedUserDetails.state);
+            }
+            if (savedUserDetails.city) {
+                setSelectedDistrict(savedUserDetails.city);
+                setDistrictInput(savedUserDetails.city);
+            }
+
+            setPostalCode(savedUserDetails.postalCode || "");
+            setShowAutoFillPopup(false);
+        }
+    };
+
     // Validation State
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -135,18 +174,16 @@ function CheckoutContent() {
         // Email or Mobile Validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const mobileRegex = /^[0-9]{10}$/;
-        const contactInput = (document.getElementById('email-address') as HTMLInputElement)?.value;
 
-        if (!contactInput) {
+        if (!emailInput) {
             newErrors.email = "Mobile or Email is required";
             isValid = false;
-        } else if (!emailRegex.test(contactInput) && !mobileRegex.test(contactInput)) {
+        } else if (!emailRegex.test(emailInput) && !mobileRegex.test(emailInput)) {
             newErrors.email = "Please enter a valid email or mobile number";
             isValid = false;
         }
 
         // Full Name Validation
-        const nameInput = (document.getElementById('full-name') as HTMLInputElement)?.value;
         if (!nameInput?.trim()) {
             newErrors.name = "Full name is required";
             isValid = false;
@@ -398,7 +435,11 @@ function CheckoutContent() {
                                         name="email-address"
                                         type="text"
                                         placeholder="Enter mobile or email"
-                                        onChange={() => clearError('email')}
+                                        value={emailInput}
+                                        onChange={(e) => {
+                                            setEmailInput(e.target.value);
+                                            clearError('email');
+                                        }}
                                     />
                                     {errors.email && (
                                         <p className="mt-1 text-sm text-red-500 animate-pulse">{errors.email}</p>
@@ -427,7 +468,11 @@ function CheckoutContent() {
                                             id="full-name"
                                             name="full-name"
                                             type="text"
-                                            onChange={() => clearError('name')}
+                                            value={nameInput}
+                                            onChange={(e) => {
+                                                setNameInput(e.target.value);
+                                                clearError('name');
+                                            }}
                                         />
                                         {errors.name && (
                                             <p className="mt-1 text-sm text-red-500 animate-pulse">{errors.name}</p>
@@ -676,8 +721,8 @@ function CheckoutContent() {
                                         total: total,
                                         items: cartItems,
                                         shippingAddress: {
-                                            name: (document.getElementById('full-name') as HTMLInputElement)?.value,
-                                            email: (document.getElementById('email-address') as HTMLInputElement)?.value,
+                                            name: nameInput,
+                                            email: emailInput,
                                             address: addressInput,
                                             city: selectedDistrict,
                                             state: selectedState,
@@ -686,9 +731,17 @@ function CheckoutContent() {
                                         }
                                     };
 
-                                    // Save User Name
-                                    const userName = (document.getElementById('full-name') as HTMLInputElement)?.value;
-                                    localStorage.setItem('roundmart_user_name', userName);
+                                    // Save User Name and Details
+                                    localStorage.setItem('roundmart_user_name', nameInput);
+                                    localStorage.setItem('roundmart_user_details', JSON.stringify({
+                                        name: nameInput,
+                                        email: emailInput,
+                                        address: addressInput,
+                                        city: selectedDistrict,
+                                        state: selectedState,
+                                        country: selectedCountry,
+                                        postalCode: postalCode
+                                    }));
 
                                     // Save Order to History
                                     const existingOrders = JSON.parse(localStorage.getItem('roundmart_orders') || '[]');
@@ -791,7 +844,73 @@ function CheckoutContent() {
                     </div>
                 </div>
             </div>
-        </main>
+
+            {/* Auto-fill Popup - Apple Inspired */}
+            {showAutoFillPopup && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-500 ease-out"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', animation: 'fadeIn 0.4s ease-out' }}
+                    onClick={() => setShowAutoFillPopup(false)}
+                >
+                    <div
+                        className="relative w-72 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl overflow-hidden"
+                        style={{
+                            animation: 'popupSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                            boxShadow: '0 0 0 0.5px rgba(0,0,0,0.1), 0 24px 48px -12px rgba(0,0,0,0.4)'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header with close */}
+                        <div className="relative pt-6 pb-2 px-6">
+                            <button
+                                onClick={() => setShowAutoFillPopup(false)}
+                                className="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200"
+                            >
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                                    <path d="M1 1L11 11M11 1L1 11" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex flex-col items-center text-center px-4 sm:px-6 pb-5">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 flex items-center justify-center mb-3 sm:mb-4 shadow-lg" style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)' }}>
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif', letterSpacing: '-0.02em' }}>
+                                Welcome back{savedUserDetails?.name ? `, ${savedUserDetails.name.split(' ')[0]}` : ''}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif' }}>
+                                Use your saved information?
+                            </p>
+                        </div>
+
+                        {/* Buttons - Apple style stacked */}
+                        <div className="border-t border-gray-200 dark:border-zinc-800">
+                            <button
+                                onClick={handleAutoFill}
+                                className="w-full py-3.5 text-blue-500 text-base font-medium hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors active:bg-gray-100 dark:active:bg-zinc-700"
+                                style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif' }}
+                            >
+                                Continue
+                            </button>
+                            <div className="border-t border-gray-200 dark:border-zinc-800">
+                                <button
+                                    onClick={() => setShowAutoFillPopup(false)}
+                                    className="w-full py-3.5 text-gray-500 dark:text-gray-400 text-base font-normal hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors active:bg-gray-100 dark:active:bg-zinc-700"
+                                    style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif' }}
+                                >
+                                    Not Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </main >
     );
 }
 

@@ -42,14 +42,16 @@ export default function DashboardPage() {
                                     {orders.length > 0 ? (
                                         orders.map((order) => (
                                             <div key={order.id} className="flex items-center justify-between gap-4 p-6">
-                                                <Link href={`/product/${order.items[0].id}`} className="flex items-start gap-4 flex-1 group">
-                                                    <div
-                                                        className="h-[70px] w-[70px] flex-shrink-0 rounded-lg bg-cover bg-center bg-no-repeat border border-gray-100 dark:border-gray-700"
-                                                        style={{
-                                                            backgroundImage: `url("${order.items[0].image}")`,
-                                                        }}
-                                                    ></div>
-                                                    <div className="flex flex-1 flex-col justify-center">
+                                                <div className="flex items-start gap-4 flex-1 group">
+                                                    <Link href={order.items?.[0]?.id ? `/product/${order.items[0].id}` : '/account/orders'}>
+                                                        <div
+                                                            className="h-[70px] w-[70px] flex-shrink-0 rounded-lg bg-cover bg-center bg-no-repeat border border-gray-100 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 transition-transform hover:scale-105"
+                                                            style={{
+                                                                backgroundImage: order.items?.[0]?.image ? `url("${order.items[0].image}")` : 'none',
+                                                            }}
+                                                        ></div>
+                                                    </Link>
+                                                    <Link href={`/account/orders?highlight=${order.id}`} className="flex flex-1 flex-col justify-center cursor-pointer">
                                                         <p className="text-base font-medium leading-normal text-gray-900 dark:text-white group-hover:text-primary transition-colors">
                                                             Order {order.id}
                                                         </p>
@@ -62,10 +64,10 @@ export default function DashboardPage() {
                                                                 {order.status}
                                                             </p>
                                                         </div>
-                                                    </div>
-                                                </Link>
+                                                    </Link>
+                                                </div>
                                                 <Link
-                                                    href={`/product/${order.items[0].id}`}
+                                                    href={order.items?.[0]?.id ? `/product/${order.items[0].id}` : '/account/orders'}
                                                     className="hidden text-sm font-medium text-primary hover:underline sm:block"
                                                 >
                                                     View Details
