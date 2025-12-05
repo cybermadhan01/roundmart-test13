@@ -6,14 +6,38 @@ import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
     const [userName, setUserName] = useState("Guest");
+    const [userEmail, setUserEmail] = useState("");
+    const [userPhone, setUserPhone] = useState("");
+    const [memberSince, setMemberSince] = useState("");
     const [orders, setOrders] = useState<any[]>([]);
 
     useEffect(() => {
+        // Load user details
+        const savedDetails = JSON.parse(localStorage.getItem('roundmart_user_details') || '{}');
         const savedName = localStorage.getItem('roundmart_user_name');
-        if (savedName) setUserName(savedName);
 
+        if (savedName) setUserName(savedName);
+        if (savedDetails.email) setUserEmail(savedDetails.email);
+        if (savedDetails.phone) setUserPhone(savedDetails.phone);
+
+        // Load orders
         const savedOrders = JSON.parse(localStorage.getItem('roundmart_orders') || '[]');
         setOrders(savedOrders);
+
+        // Calculate member since date
+        if (savedOrders.length > 0) {
+            // Get the earliest order date
+            const dates = savedOrders.map((o: any) => new Date(o.date).getTime());
+            const earliestDate = new Date(Math.min(...dates));
+            setMemberSince(earliestDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+        } else if (savedDetails.registeredAt) {
+            // If user registered via contact/form
+            const regDate = new Date(savedDetails.registeredAt);
+            setMemberSince(regDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+        } else {
+            // New user - show current date
+            setMemberSince(new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+        }
     }, []);
 
     return (
@@ -102,11 +126,13 @@ export default function DashboardPage() {
                                     <p className="font-medium text-gray-900 dark:text-white">
                                         {userName}
                                     </p>
+                                    {(userEmail || userPhone) && (
+                                        <p className="text-gray-500 dark:text-gray-400">
+                                            {userEmail || userPhone}
+                                        </p>
+                                    )}
                                     <p className="text-gray-500 dark:text-gray-400">
-                                        alex.doe@email.com
-                                    </p>
-                                    <p className="text-gray-500 dark:text-gray-400">
-                                        Member since: Jan 2023
+                                        Member since: {memberSince}
                                     </p>
                                 </div>
                                 <Link

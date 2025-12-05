@@ -1,15 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
+    const [userName, setUserName] = useState("Guest");
+    const [userEmail, setUserEmail] = useState("");
+    const [userInitials, setUserInitials] = useState("G");
     const [formData, setFormData] = useState({
-        fullName: "Alex Doe",
-        email: "alex.doe@email.com",
-        phone: "+1 (555) 123-4567",
-        location: "San Francisco, CA",
+        fullName: "",
+        email: "",
+        phone: "",
+        location: "",
     });
+
+    useEffect(() => {
+        const savedDetails = JSON.parse(localStorage.getItem('roundmart_user_details') || '{}');
+        const savedName = localStorage.getItem('roundmart_user_name') || "Guest";
+
+        setUserName(savedName);
+        setUserEmail(savedDetails.email || "");
+
+        // Generate initials from name
+        const nameParts = savedName.split(' ');
+        const initials = nameParts.length > 1
+            ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+            : savedName.substring(0, 2).toUpperCase();
+        setUserInitials(initials);
+
+        // Update form data
+        setFormData({
+            fullName: savedName,
+            email: savedDetails.email || "",
+            phone: savedDetails.phone || "",
+            location: savedDetails.address || "",
+        });
+    }, []);
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
@@ -20,20 +46,18 @@ export default function ProfilePage() {
                         <div className="flex flex-col gap-4">
                             {/* User Profile */}
                             <div className="flex gap-3 items-center">
-                                <div
-                                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                                    style={{
-                                        backgroundImage:
-                                            'url("https://cdn.usegalileo.ai/sdxl10/d5e8f5f8-74b7-4a22-9a5c-dc2d5b724b0f.png")',
-                                    }}
-                                ></div>
+                                <div className="flex items-center justify-center size-10 rounded-full bg-gradient-to-br from-primary to-blue-600 text-white font-bold text-sm">
+                                    {userInitials}
+                                </div>
                                 <div className="flex flex-col">
                                     <h1 className="text-gray-900 dark:text-white text-base font-medium leading-normal">
-                                        Alex Doe
+                                        {userName}
                                     </h1>
-                                    <p className="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">
-                                        alex.doe@email.com
-                                    </p>
+                                    {userEmail && (
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">
+                                            {userEmail}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -53,7 +77,7 @@ export default function ProfilePage() {
                                 </Link>
                                 <Link
                                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    href="#"
+                                    href="/account/security"
                                 >
                                     <span
                                         className="material-symbols-outlined text-gray-700 dark:text-gray-300"
@@ -67,7 +91,7 @@ export default function ProfilePage() {
                                 </Link>
                                 <Link
                                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    href="#"
+                                    href="/account/preferences"
                                 >
                                     <span
                                         className="material-symbols-outlined text-gray-700 dark:text-gray-300"
@@ -102,50 +126,11 @@ export default function ProfilePage() {
                 <div className="md:col-span-3">
                     <div className="flex flex-col space-y-8">
                         {/* Page Heading */}
-                        <div>
+                        <div className="mb-6">
                             <h1 className="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
                                 Profile
                             </h1>
-                            <p className="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal mt-2">
-                                This information will be displayed publicly so be careful what
-                                you share.
-                            </p>
                         </div>
-
-                        <hr className="border-gray-200 dark:border-gray-800" />
-
-                        {/* Profile Header & Uploader */}
-                        <div className="flex">
-                            <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
-                                <div className="flex gap-6 items-center">
-                                    <div
-                                        className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 shrink-0"
-                                        style={{
-                                            backgroundImage:
-                                                'url("https://cdn.usegalileo.ai/sdxl10/d5e8f5f8-74b7-4a22-9a5c-dc2d5b724b0f.png")',
-                                        }}
-                                    ></div>
-                                    <div className="flex flex-col justify-center">
-                                        <p className="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">
-                                            Profile Photo
-                                        </p>
-                                        <p className="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">
-                                            Update your photo and personal details.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] sm:w-auto">
-                                        <span className="truncate">Delete</span>
-                                    </button>
-                                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] sm:w-auto">
-                                        <span className="truncate">Upload</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr className="border-gray-200 dark:border-gray-800" />
 
                         {/* Form */}
                         <form className="space-y-6">

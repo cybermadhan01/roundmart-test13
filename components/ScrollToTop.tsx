@@ -28,10 +28,11 @@ export default function ScrollToTop() {
     useEffect(() => {
         // Scroll to top on route change (unless it's a back/forward navigation)
         if (!isBackNavigation.current) {
-            // Instant check to avoid any delay
+            // Force scroll to the absolute top-left corner
             window.scrollTo({
                 top: 0,
-                behavior: "smooth", // User requested "smooth slow animated"
+                left: 0,
+                behavior: "smooth"
             });
         }
 
