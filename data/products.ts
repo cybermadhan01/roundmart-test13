@@ -222,7 +222,7 @@ export const products: Product[] = [
         id: 202,
         name: "Ceramic Coffee Set",
         price: "₹3,499",
-        image: "https://images.unsplash.com/photo-1517254797898-04ecd251dbb6?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?auto=format&fit=crop&q=80&w=800",
         badge: "Featured",
         rating: 4.8,
         reviewCount: 675,
